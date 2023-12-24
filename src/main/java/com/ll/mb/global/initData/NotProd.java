@@ -6,6 +6,7 @@ import com.ll.mb.domain.cash.cash.entity.CashLog;
 import com.ll.mb.domain.member.member.entity.Member;
 import com.ll.mb.domain.member.member.service.MemberService;
 import com.ll.mb.domain.product.cart.service.CartService;
+import com.ll.mb.domain.product.order.entity.Order;
 import com.ll.mb.domain.product.order.service.OrderService;
 import com.ll.mb.domain.product.product.entity.Product;
 import com.ll.mb.domain.product.product.service.ProductService;
@@ -63,9 +64,13 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         cartService.addItem(memberUser1, product3);
 
         // rel = related
-        memberService.addCash(memberUser1, 100_000, CashLog.EventType.충전__무통장입금, memberUser1);
+        memberService.addCash(memberUser1, 150_000, CashLog.EventType.충전__무통장입금, memberUser1);
         memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
 
-        orderService.createFromCart(memberUser1);
+        Order order1 = orderService.createFromCart(memberUser1);
+
+        long order1PayPrice = order1.calcPayPrice();
+
+        orderService.payByCashOnly(order1);
     }
 }
