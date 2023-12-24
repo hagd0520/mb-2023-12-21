@@ -87,6 +87,9 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         Order order2 = orderService.createFromCart(memberUser3);
         orderService.payByCashOnly(order2);
         orderService.refund(order2);
+
+        Order order3 = orderService.createFromCart(memberUser2);
+        orderService.checkPayPrice(order3, 85_001);
     }
 
     @Transactional
