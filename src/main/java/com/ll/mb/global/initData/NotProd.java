@@ -88,8 +88,10 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         orderService.payByCashOnly(order2);
         orderService.refund(order2);
 
+        memberService.addCash(memberUser2, 150_000, CashLog.EventType.충전__무통장입금, memberUser2);
+
         Order order3 = orderService.createFromCart(memberUser2);
-        orderService.checkPayPrice(order3, 85_001);
+        orderService.checkCanPay(order3, 55_000);
     }
 
     @Transactional
