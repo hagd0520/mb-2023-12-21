@@ -35,6 +35,7 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
     ApplicationRunner initNotProd() {
         return args -> {
             self.work1();
+            self.work2();
         };
     }
 
@@ -42,10 +43,10 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
     public void work1() {
         if ( memberService.findByUsername("admin").isPresent()) return;
 
-        Member memberAdmin = memberService.join("user1", "1234").getData();
-        Member memberUser1 = memberService.join("user2", "1234").getData();
-        Member memberUser2 = memberService.join("user3", "1234").getData();
-        Member memberUser3 = memberService.join("admin", "1234").getData();
+        Member memberAdmin = memberService.join("admin", "1234").getData();
+        Member memberUser1 = memberService.join("user1", "1234").getData();
+        Member memberUser2 = memberService.join("user2", "1234").getData();
+        Member memberUser3 = memberService.join("user3", "1234").getData();
 
         Book book1 = bookService.createBook(memberUser1 ,"책 제목 1", "책 내용 1", 10_000);
         Book book2 = bookService.createBook(memberUser2 ,"책 제목 2", "책 내용 2", 20_000);
@@ -63,6 +64,14 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         cartService.addItem(memberUser1, product2);
         cartService.addItem(memberUser1, product3);
 
+        cartService.addItem(memberUser2, product1);
+        cartService.addItem(memberUser2, product2);
+        cartService.addItem(memberUser2, product3);
+
+        cartService.addItem(memberUser3, product1);
+        cartService.addItem(memberUser3, product2);
+        cartService.addItem(memberUser3, product3);
+
         // rel = related
         memberService.addCash(memberUser1, 150_000, CashLog.EventType.충전__무통장입금, memberUser1);
         memberService.addCash(memberUser1, -20_000, CashLog.EventType.출금__통장입금, memberUser1);
@@ -72,5 +81,19 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         long order1PayPrice = order1.calcPayPrice();
 
         orderService.payByCashOnly(order1);
+
+        memberService.addCash(memberUser3, 150_000, CashLog.EventType.충전__무통장입금, memberUser3);
+
+        Order order2 = orderService.createFromCart(memberUser3);
+        orderService.payByCashOnly(order2);
+        orderService.refund(order2);
+    }
+
+    @Transactional
+    public void work2() {
+//        Member memberUser1 = memberService.findByUsername("user1").get();
+//        Product product1 = productService.findById(1L).get();
+//
+//        cartService.addItem(memberUser1, product1);
     }
 }

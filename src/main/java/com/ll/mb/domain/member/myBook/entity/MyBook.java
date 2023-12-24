@@ -1,7 +1,7 @@
-package com.ll.mb.domain.product.cart.entity;
+package com.ll.mb.domain.member.myBook.entity;
 
+import com.ll.mb.domain.book.book.entity.Book;
 import com.ll.mb.domain.member.member.entity.Member;
-import com.ll.mb.domain.product.product.entity.Product;
 import com.ll.mb.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -16,10 +16,9 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class CartItem extends BaseEntity {
+public class MyBook extends BaseEntity {
     @ManyToOne
-    private Member buyer;
+    private Member owner;
     @ManyToOne
-    private Product product;
-
+    private Book book;
 }
