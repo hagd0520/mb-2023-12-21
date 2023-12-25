@@ -92,6 +92,7 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
 
         Order order3 = orderService.createFromCart(memberUser2);
         orderService.checkCanPay(order3, 55_000);
+        orderService.payByTossPayments(order3, 55_000);
     }
 
     @Transactional

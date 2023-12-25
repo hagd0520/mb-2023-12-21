@@ -56,6 +56,27 @@ public class OrderService {
         payDone(order);
     }
 
+    @Transactional
+    public void payByTossPayments(Order order, long pgPayPrice) {
+        Member buyer = order.getBuyer();
+        long restCash = buyer.getRestCash();
+        long payPrice = order.calcPayPrice();
+
+        long useRestCash = payPrice - pgPayPrice;
+        memberService.addCash(buyer, pgPayPrice, CashLog.EventType.충전__토스페이먼츠, order);
+        memberService.addCash(buyer, pgPayPrice * -1,CashLog.EventType.사용__토스페이먼츠_주문결제, order);
+
+        if (useRestCash > 0) {
+            if (useRestCash > restCash) {
+                throw new GlobalException("400-2", "예치금이 부족합니다.");
+            }
+
+            memberService.addCash(buyer, useRestCash * -1, CashLog.EventType.사용__예치금_주문결제, order);
+        }
+
+        payDone(order);
+    }
+
     private void payDone(Order order) {
         order.setPaymentDone();
     }
