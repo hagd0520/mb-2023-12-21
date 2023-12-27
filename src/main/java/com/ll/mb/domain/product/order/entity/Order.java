@@ -3,6 +3,7 @@ package com.ll.mb.domain.product.order.entity;
 import com.ll.mb.domain.global.exceptions.GlobalException;
 import com.ll.mb.domain.member.member.entity.Member;
 import com.ll.mb.domain.product.cart.entity.CartItem;
+import com.ll.mb.global.app.AppConfig;
 import com.ll.mb.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -11,8 +12,10 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static lombok.AccessLevel.PROTECTED;
@@ -31,6 +34,7 @@ public class Order extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "order", cascade = ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime payDate; // 결제일
@@ -74,5 +78,48 @@ public class Order extends BaseEntity {
 
         orderItems.stream()
                 .forEach(OrderItem::setRefundDone);
+    }
+
+    public String getName() {
+        String name = orderItems.get(0).getProduct().getName();
+
+        if (orderItems.size() > 1) {
+            name += " 외 %d건".formatted(orderItems.size() - 1);
+        }
+
+        return name;
+    }
+
+    public String getCode() {
+        // yyyy-MM-dd 형식의 DateTimeFormatter 생성
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // LocalDateTime 객체를 문자열로 변환
+        return getCreateDate().format(formatter) + (AppConfig.isNotProd() ? "-test-" + UUID.randomUUID().toString() : "") + "__" + getId();
+    }
+
+    public boolean isPayable() {
+        if (payDate != null) return false;
+        if (cancelDate != null) return false;
+
+        return true;
+    }
+
+    public String getForPrintPayStatus() {
+        if (payDate == null) return "결제대기";
+
+        return "결제완료("+ payDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
+    }
+
+    public String getForPrintCancelStatus() {
+        if (cancelDate == null) return "취소가능";
+
+        return "취소완료("+ cancelDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
+    }
+
+    public String getForPrintRefundStatus() {
+        if (refundDate == null) return "환불가능";
+
+        return "환불완료("+ refundDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + ")";
     }
 }

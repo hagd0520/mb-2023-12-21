@@ -32,6 +32,7 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
     private final OrderService orderService;
 
     @Bean
+    @org.springframework.core.annotation.Order(3)
     ApplicationRunner initNotProd() {
         return args -> {
             self.work1();
@@ -43,10 +44,12 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
     public void work1() {
         if ( memberService.findByUsername("admin").isPresent()) return;
 
-        Member memberAdmin = memberService.join("admin", "1234").getData();
-        Member memberUser1 = memberService.join("user1", "1234").getData();
-        Member memberUser2 = memberService.join("user2", "1234").getData();
-        Member memberUser3 = memberService.join("user3", "1234").getData();
+        Member memberAdmin = memberService.join("admin", "1234", "관리자").getData();
+        Member memberUser1 = memberService.join("user1", "1234", "유저1").getData();
+        Member memberUser2 = memberService.join("user2", "1234", "유저2").getData();
+        Member memberUser3 = memberService.join("user3", "1234", "유저3").getData();
+        Member memberUser4 = memberService.join("user4", "1234", "유저4").getData();
+        Member memberUser5 = memberService.join("user5", "1234", "유저5").getData();
 
         Book book1 = bookService.createBook(memberUser1 ,"책 제목 1", "책 내용 1", 10_000);
         Book book2 = bookService.createBook(memberUser2 ,"책 제목 2", "책 내용 2", 20_000);
@@ -93,6 +96,26 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         Order order3 = orderService.createFromCart(memberUser2);
         orderService.checkCanPay(order3, 55_000);
         orderService.payByTossPayments(order3, 55_000);
+
+        memberService.addCash(memberUser4, 150_000, CashLog.EventType.충전__무통장입금, memberUser4);
+
+        cartService.addItem(memberUser4, product1);
+        cartService.addItem(memberUser4, product2);
+        cartService.addItem(memberUser4, product3);
+
+        Order order4 = orderService.createFromCart(memberUser4);
+
+        memberService.addCash(memberUser5, 150_000, CashLog.EventType.충전__무통장입금, memberUser5);
+
+        cartService.addItem(memberUser5, product1);
+
+        Order order5 = orderService.createFromCart(memberUser5);
+
+        orderService.payByCashOnly(order5);
+
+        cartService.addItem(memberUser5, product2);
+
+        Order order6 = orderService.createFromCart(memberUser5);
     }
 
     @Transactional
