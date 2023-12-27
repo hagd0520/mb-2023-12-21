@@ -58,10 +58,10 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         Book book5 = bookService.createBook(memberUser3 ,"책 제목 5", "책 내용 5", 15_000);
         Book book6 = bookService.createBook(memberUser3 ,"책 제목 6", "책 내용 6", 20_000);
 
-        Product product1 = productService.createProduct(book3);
-        Product product2 = productService.createProduct(book4);
-        Product product3 = productService.createProduct(book5);
-        Product product4 = productService.createProduct(book5);
+        Product product1 = productService.createProduct(book3, true);
+        Product product2 = productService.createProduct(book4, true);
+        Product product3 = productService.createProduct(book5, true);
+        Product product4 = productService.createProduct(book5, true);
 
         cartService.addItem(memberUser1, product1);
         cartService.addItem(memberUser1, product2);
@@ -89,7 +89,7 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
 
         Order order2 = orderService.createFromCart(memberUser3);
         orderService.payByCashOnly(order2);
-        orderService.refund(order2);
+        orderService.cancel(order2);
 
         memberService.addCash(memberUser2, 150_000, CashLog.EventType.충전__무통장입금, memberUser2);
 
@@ -116,6 +116,17 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         cartService.addItem(memberUser5, product2);
 
         Order order6 = orderService.createFromCart(memberUser5);
+
+        orderService.cancel(order6);
+
+        cartService.addItem(memberUser5, product3);
+
+        Order order7 = orderService.createFromCart(memberUser5);
+        orderService.payByCashOnly(order7);
+        orderService.cancel(order7);
+
+        cartService.addItem(memberUser5, product4);
+        Order order8 = orderService.createFromCart(memberUser5);
     }
 
     @Transactional
