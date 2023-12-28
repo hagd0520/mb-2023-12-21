@@ -1,8 +1,7 @@
-package com.ll.mb.domain.product.cart.entity;
+package com.ll.mb.domain.product.product.entity;
 
 import com.ll.mb.domain.member.member.entity.Member;
-import com.ll.mb.domain.product.product.entity.Product;
-import com.ll.mb.global.jpa.BaseTime;
+import com.ll.mb.global.jpa.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
@@ -13,13 +12,12 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor(access = PROTECTED)
 @NoArgsConstructor(access = PROTECTED)
-@Getter
 @Setter
+@Getter
 @ToString(callSuper = true)
-public class CartItem extends BaseTime {
+public class ProductBookmark extends BaseEntity {
     @ManyToOne
-    private Member buyer;
+    private Member member;
     @ManyToOne
     private Product product;
-
 }
