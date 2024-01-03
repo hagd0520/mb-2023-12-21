@@ -51,12 +51,12 @@ public class NotProd { // TDD를 고려해 테스트 전에 한번씩 실행되�
         Member memberUser4 = memberService.join("user4", "1234", "유저4").getData();
         Member memberUser5 = memberService.join("user5", "1234", "유저5").getData();
 
-        Book book1 = bookService.createBook(memberUser1 ,"책 제목 1", "책 내용 1", 10_000);
-        Book book2 = bookService.createBook(memberUser2 ,"책 제목 2", "책 내용 2", 20_000);
-        Book book3 = bookService.createBook(memberUser2 ,"책 제목 3", "책 내용 3", 30_000);
-        Book book4 = bookService.createBook(memberUser3 ,"책 제목 4", "책 내용 4", 40_000);
-        Book book5 = bookService.createBook(memberUser3 ,"책 제목 5", "책 내용 5", 15_000);
-        Book book6 = bookService.createBook(memberUser3 ,"책 제목 6", "책 내용 6", 20_000);
+        Book book1 = bookService.createBook(memberUser1 ,"책 제목 1", "책 내용 1", 10_000, true);
+        Book book2 = bookService.createBook(memberUser2 ,"책 제목 2", "책 내용 2", 20_000, true);
+        Book book3 = bookService.createBook(memberUser2 ,"책 제목 3", "책 내용 3", 30_000, true);
+        Book book4 = bookService.createBook(memberUser3 ,"책 제목 4", "책 내용 4", 40_000, true);
+        Book book5 = bookService.createBook(memberUser3 ,"책 제목 5", "책 내용 5", 15_000, true);
+        Book book6 = bookService.createBook(memberUser3 ,"책 제목 6", "책 내용 6", 20_000, true);
 
         Product product1 = productService.createProduct(book3, true);
         Product product2 = productService.createProduct(book4, true);
